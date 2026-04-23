@@ -1,5 +1,5 @@
 import { supabase } from './supabase_client';
-import { Product, User, MessageThread, Message, Theme } from '../types';
+import { Product, User, MessageThread, Message, Theme, Property, Booking, Review } from '../types';
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 export const getTheme = (): Theme => {
@@ -25,10 +25,71 @@ const rowToUser = (u: any): User => ({
     username: u.username,
     profilePicture: u.profile_picture,
     phone: u.phone ?? undefined,
-    bio: u.bio ?? undefined,          // ← add
+    whatsappNumber: u.whatsapp_number ?? undefined,
+    bio: u.bio ?? undefined,
     isVerified: u.is_verified ?? false,
     isBoosted: u.is_boosted ?? false,
     boostedUntil: u.boosted_until ?? null,
+    responseRate: u.response_rate ?? undefined,
+    responseTime: u.response_time ?? undefined,
+    hostRating: u.host_rating ?? undefined,
+    hostReviewCount: u.host_review_count ?? undefined,
+});
+
+// ── Helper: map DB row → Property ──────────────────────────────────────────────
+const rowToProperty = (p: any): Property => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    location: p.location,
+    images: p.images || [],
+    pricePerNight: p.price_per_night,
+    guestCapacity: p.guest_capacity,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    hostId: p.host_id,
+    amenities: p.amenities || [],
+    checkInTime: p.check_in_time || '15:00',
+    checkOutTime: p.check_out_time || '11:00',
+    houseRules: p.house_rules ?? undefined,
+    cancellationPolicy: p.cancellation_policy || 'moderate',
+    rating: p.rating || 0,
+    reviewCount: p.review_count || 0,
+    latitude: p.latitude ?? undefined,
+    longitude: p.longitude ?? undefined,
+    createdAt: p.created_at,
+});
+
+// ── Helper: map DB row → Booking ───────────────────────────────────────────────
+const rowToBooking = (b: any): Booking => ({
+    id: b.id,
+    propertyId: b.property_id,
+    guestId: b.guest_id,
+    hostId: b.host_id,
+    checkInDate: b.check_in_date,
+    checkOutDate: b.check_out_date,
+    numberOfGuests: b.number_of_guests,
+    totalPrice: b.total_price,
+    status: b.status,
+    guestMessage: b.guest_message ?? undefined,
+    createdAt: b.created_at,
+});
+
+// ── Helper: map DB row → Review ────────────────────────────────────────────────
+const rowToReview = (r: any): Review => ({
+    id: r.id,
+    bookingId: r.booking_id,
+    propertyId: r.property_id,
+    reviewerId: r.reviewer_id,
+    rating: r.rating,
+    cleanliness: r.cleanliness_rating,
+    communication: r.communication_rating,
+    accuracy: r.accuracy_rating,
+    location: r.location_rating,
+    checkin: r.checkin_rating,
+    value: r.value_rating,
+    comment: r.comment ?? undefined,
+    createdAt: r.created_at,
 });
 
 // ── Users ─────────────────────────────────────────────────────────────────────
@@ -188,4 +249,174 @@ export const uploadImage = async (file: File, bucket: 'products' | 'profiles'): 
         if (error) throw error;
         return supabase.storage.from(bucket).getPublicUrl(data.path).data.publicUrl;
     } catch (e) { console.error('uploadImage:', e); return null; }
+};
+
+// ── Properties ─────────────────────────────────────────────────────────────────
+export const getProperties = async (): Promise<Property[]> => {
+    try {
+        const { data, error } = await supabase.from('properties').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        return (data || []).map(rowToProperty);
+    } catch (e) { console.error('getProperties:', e); return []; }
+};
+
+export const getPropertyById = async (id: string): Promise<Property | null> => {
+    try {
+        const { data, error } = await supabase.from('properties').select('*').eq('id', id).single();
+        if (error) throw error;
+        return data ? rowToProperty(data) : null;
+    } catch (e) { console.error('getPropertyById:', e); return null; }
+};
+
+export const getPropertiesByHost = async (hostId: string): Promise<Property[]> => {
+    try {
+        const { data, error } = await supabase.from('properties').select('*').eq('host_id', hostId);
+        if (error) throw error;
+        return (data || []).map(rowToProperty);
+    } catch (e) { console.error('getPropertiesByHost:', e); return []; }
+};
+
+export const createProperty = async (property: Omit<Property, 'id' | 'createdAt'>): Promise<Property | null> => {
+    try {
+        const { data, error } = await supabase
+            .from('properties')
+            .insert({
+                title: property.title,
+                description: property.description,
+                location: property.location,
+                images: property.images,
+                price_per_night: property.pricePerNight,
+                guest_capacity: property.guestCapacity,
+                bedrooms: property.bedrooms,
+                bathrooms: property.bathrooms,
+                host_id: property.hostId,
+                amenities: property.amenities,
+                check_in_time: property.checkInTime,
+                check_out_time: property.checkOutTime,
+                house_rules: property.houseRules || null,
+                cancellation_policy: property.cancellationPolicy,
+                latitude: property.latitude || null,
+                longitude: property.longitude || null,
+            })
+            .select()
+            .single();
+        if (error) throw error;
+        return rowToProperty(data);
+    } catch (e) { console.error('createProperty:', e); return null; }
+};
+
+export const updateProperty = async (id: string, updates: Partial<Property>): Promise<Property | null> => {
+    try {
+        const updateData: any = {};
+        if (updates.title) updateData.title = updates.title;
+        if (updates.description) updateData.description = updates.description;
+        if (updates.location) updateData.location = updates.location;
+        if (updates.images) updateData.images = updates.images;
+        if (updates.pricePerNight) updateData.price_per_night = updates.pricePerNight;
+        if (updates.amenities) updateData.amenities = updates.amenities;
+        if (updates.houseRules) updateData.house_rules = updates.houseRules;
+        
+        const { data, error } = await supabase.from('properties').update(updateData).eq('id', id).select().single();
+        if (error) throw error;
+        return rowToProperty(data);
+    } catch (e) { console.error('updateProperty:', e); return null; }
+};
+
+// ── Bookings ───────────────────────────────────────────────────────────────────
+export const getBookings = async (): Promise<Booking[]> => {
+    try {
+        const { data, error } = await supabase.from('bookings').select('*').order('check_in_date', { ascending: false });
+        if (error) throw error;
+        return (data || []).map(rowToBooking);
+    } catch (e) { console.error('getBookings:', e); return []; }
+};
+
+export const getBookingsByProperty = async (propertyId: string): Promise<Booking[]> => {
+    try {
+        const { data, error } = await supabase.from('bookings').select('*').eq('property_id', propertyId);
+        if (error) throw error;
+        return (data || []).map(rowToBooking);
+    } catch (e) { console.error('getBookingsByProperty:', e); return []; }
+};
+
+export const getBookingsByHost = async (hostId: string): Promise<Booking[]> => {
+    try {
+        const { data, error } = await supabase.from('bookings').select('*').eq('host_id', hostId);
+        if (error) throw error;
+        return (data || []).map(rowToBooking);
+    } catch (e) { console.error('getBookingsByHost:', e); return []; }
+};
+
+export const getBookingsByGuest = async (guestId: string): Promise<Booking[]> => {
+    try {
+        const { data, error } = await supabase.from('bookings').select('*').eq('guest_id', guestId);
+        if (error) throw error;
+        return (data || []).map(rowToBooking);
+    } catch (e) { console.error('getBookingsByGuest:', e); return []; }
+};
+
+export const createBooking = async (booking: Omit<Booking, 'id' | 'createdAt'>): Promise<Booking | null> => {
+    try {
+        const { data, error } = await supabase
+            .from('bookings')
+            .insert({
+                property_id: booking.propertyId,
+                guest_id: booking.guestId,
+                host_id: booking.hostId,
+                check_in_date: booking.checkInDate,
+                check_out_date: booking.checkOutDate,
+                number_of_guests: booking.numberOfGuests,
+                total_price: booking.totalPrice,
+                status: booking.status,
+                guest_message: booking.guestMessage || null,
+            })
+            .select()
+            .single();
+        if (error) throw error;
+        return rowToBooking(data);
+    } catch (e) { console.error('createBooking:', e); return null; }
+};
+
+export const updateBookingStatus = async (id: string, status: Booking['status']): Promise<Booking | null> => {
+    try {
+        const { data, error } = await supabase.from('bookings').update({ status }).eq('id', id).select().single();
+        if (error) throw error;
+        return rowToBooking(data);
+    } catch (e) { console.error('updateBookingStatus:', e); return null; }
+};
+
+// ── Reviews ────────────────────────────────────────────────────────────────────
+export const getReviewsByProperty = async (propertyId: string): Promise<Review[]> => {
+    try {
+        const { data, error } = await supabase.from('reviews').select('*, reviewer:profiles(*)').eq('property_id', propertyId);
+        if (error) throw error;
+        return (data || []).map((r: any) => ({
+            ...rowToReview(r),
+            reviewer: r.reviewer ? rowToUser(r.reviewer) : undefined,
+        }));
+    } catch (e) { console.error('getReviewsByProperty:', e); return []; }
+};
+
+export const createReview = async (review: Omit<Review, 'id' | 'createdAt' | 'reviewer'>): Promise<Review | null> => {
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .insert({
+                booking_id: review.bookingId,
+                property_id: review.propertyId,
+                reviewer_id: review.reviewerId,
+                rating: review.rating,
+                cleanliness_rating: review.cleanliness,
+                communication_rating: review.communication,
+                accuracy_rating: review.accuracy,
+                location_rating: review.location,
+                checkin_rating: review.checkin,
+                value_rating: review.value,
+                comment: review.comment || null,
+            })
+            .select()
+            .single();
+        if (error) throw error;
+        return rowToReview(data);
+    } catch (e) { console.error('createReview:', e); return null; }
 };
