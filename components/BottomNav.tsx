@@ -19,12 +19,12 @@ const NavBtn: React.FC<{
     <button
       onClick={() => setActivePage(page)}
       className={`flex flex-col items-center justify-center gap-0.5 w-full h-full pt-2 pb-1 transition-all ${
-        active ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
+        active ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
       }`}
     >
-      <div className={`relative p-1 rounded-lg transition-all ${active ? 'bg-orange-50 dark:bg-orange-900/20' : ''}`}>
+      <div className={`relative p-1 rounded-lg transition-all ${active ? 'bg-blue-50' : ''}`}>
         {icon}
-        {active && <span className="absolute inset-x-2 -bottom-0.5 h-0.5 bg-orange-500 rounded-full" />}
+        {active && <span className="absolute inset-x-2 -bottom-0.5 h-0.5 bg-blue-600 rounded-full" />}
       </div>
       <span className="text-[10px] font-medium tracking-tight">{label}</span>
     </button>
@@ -33,7 +33,7 @@ const NavBtn: React.FC<{
 
 export const BottomNav: React.FC<BottomNavProps> = ({ onPostAdClick, activePage, setActivePage }) => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 shadow-xl shadow-black/10">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-xl shadow-black/10">
       <div className="flex h-16 items-stretch">
         <div className="w-1/5">
           <NavBtn

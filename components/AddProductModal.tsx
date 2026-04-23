@@ -135,7 +135,7 @@ if (isEditMode) {
           </button>
 
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-            {isEditMode ? 'Edit Your Ad' : 'Post a New Ad'}
+            {isEditMode ? 'Edit Property' : 'List a Property'}
           </h2>
 
           {mode === 'select-method' ? (
@@ -144,9 +144,9 @@ if (isEditMode) {
                 <button 
                   onClick={() => cameraInputRef.current?.click()}
                   disabled={isProcessing}
-                  className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors group disabled:opacity-50"
+                  className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors group disabled:opacity-50"
                 >
-                  <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mb-4 text-orange-600 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 text-blue-600 group-hover:scale-110 transition-transform">
                      <Icon name="camera" className="w-8 h-8" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Take a Photo</h3>
@@ -196,7 +196,7 @@ if (isEditMode) {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product Images ({images.length}/3)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Property Photos ({images.length}/3)</label>
                 
                 {/* Image Grid */}
                 <div className="grid grid-cols-3 gap-4 mb-4">
@@ -214,9 +214,9 @@ if (isEditMode) {
                     ))}
                     
                     {images.length < 3 && (
-                        <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center text-gray-400 hover:text-orange-500 hover:border-orange-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer" onClick={() => setMode('select-method')}>
+                        <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center text-gray-400 hover:text-blue-500 hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer" onClick={() => setMode('select-method')}>
                              {isProcessing ? (
-                                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600"></div>
+                                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                              ) : (
                                  <>
                                     <Icon name="plus" className="w-6 h-6 mb-1" />
@@ -232,32 +232,32 @@ if (isEditMode) {
               </div>
 
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Product Title</label>
-                <input type="text" id="title" value={title} onChange={e => setTitle(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 text-gray-900 dark:text-gray-200" required placeholder="What are you selling?" />
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Property Title</label>
+                <input type="text" id="title" value={title} onChange={e => setTitle(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-gray-200" required placeholder="Property name (e.g., Modern 2-Bedroom Apartment)" />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
-                  <select id="category" value={category} onChange={e => setCategory(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 text-gray-900 dark:text-gray-200">
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Property Type</label>
+                  <select id="category" value={category} onChange={e => setCategory(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-gray-200">
                     {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Price (₦)</label>
-                  <input type="number" id="price" value={price} onChange={e => setPrice(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 text-gray-900 dark:text-gray-200" required placeholder="0.00" />
+                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Price per Month (₦)</label>
+                  <input type="number" id="price" value={price} onChange={e => setPrice(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-gray-200" required placeholder="0.00" />
                 </div>
               </div>
               
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} rows={4} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 text-gray-900 dark:text-gray-200" placeholder="Describe your item..." required></textarea>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Property Description</label>
+                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} rows={4} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-gray-200" placeholder="Describe the property (amenities, rooms, location, etc)..." required></textarea>
               </div>
 
               <div className="pt-4 flex justify-end space-x-3">
                 <button type="button" onClick={handleClose} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Cancel</button>
-                <button type="submit" className="bg-orange-600 text-white font-bold px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors">
-                  {isEditMode ? 'Save Changes' : 'Post Ad'}
+                <button type="submit" className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  {isEditMode ? 'Save Changes' : 'List Property'}
                 </button>
               </div>
             </form>
