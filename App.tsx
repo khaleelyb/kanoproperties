@@ -403,14 +403,14 @@ const App: React.FC = () => {
             <div className="bg-gradient-to-r from-blue-500 to-amber-400 text-white">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Find great deals in Kano</h2>
-                  <p className="text-blue-100 mt-1 text-sm">{products.length.toLocaleString()} active listings from local sellers</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Find houses and apartments in Kano</h2>
+                  <p className="text-blue-100 mt-1 text-sm">{products.length.toLocaleString()} active listings</p>
                 </div>
                 <button
                   onClick={handlePostAdClick}
                   className="flex-shrink-0 bg-white text-blue-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-50 transition-all"
                 >
-                  + Post Free Ad
+                  + Post Houses
                 </button>
               </div>
             </div>
