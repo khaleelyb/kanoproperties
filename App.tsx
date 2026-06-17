@@ -322,10 +322,10 @@ const App: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-850">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-amber-400 animate-pulse shadow-lg shadow-blue-200 dark:shadow-blue-900/40" />
-          <p className="text-sm text-gray-400 font-medium">Loading marketplace…</p>
+          <div className="w-24 h-24 rounded-4xl bg-gradient-to-br from-blue-500 to-amber-400 animate-pulse shadow-lg shadow-blue-200 dark:shadow-blue-500/40" />
+          <p className="text-sm text-gray-800 font-medium">Kano properties...</p>
         </div>
       </div>
     );
