@@ -324,7 +324,7 @@ const App: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-400 animate-pulse shadow-lg shadow-orange-200 dark:shadow-orange-900/40" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-amber-400 animate-pulse shadow-lg shadow-blue-200 dark:shadow-blue-900/40" />
           <p className="text-sm text-gray-400 font-medium">Loading marketplace…</p>
         </div>
       </div>
@@ -400,15 +400,15 @@ const App: React.FC = () => {
           <>
             <CategoryFilter categories={CATEGORIES} selectedCategory={null} setSelectedCategory={handleSelectCategory} />
             {/* Hero strip */}
-            <div className="bg-gradient-to-r from-orange-500 to-amber-400 text-white">
+            <div className="bg-gradient-to-r from-blue-500 to-amber-400 text-white">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Find great deals in Kano</h2>
-                  <p className="text-orange-100 mt-1 text-sm">{products.length.toLocaleString()} active listings from local sellers</p>
+                  <p className="text-blue-100 mt-1 text-sm">{products.length.toLocaleString()} active listings from local sellers</p>
                 </div>
                 <button
                   onClick={handlePostAdClick}
-                  className="flex-shrink-0 bg-white text-orange-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all"
+                  className="flex-shrink-0 bg-white text-blue-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-50 transition-all"
                 >
                   + Post Free Ad
                 </button>
